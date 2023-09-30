@@ -1,9 +1,13 @@
 import Providers from '@/lib/Providers'
-import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Roboto_Condensed } from 'next/font/google'
+import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto_Condensed({
+  variable: '--font-roboto',
+  subsets: ['latin'],
+  weight: ['300', '400', '700'],
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <Providers>
       <html lang='en'>
-        <body className={inter.className}>{children}</body>
+        <body className={roboto.variable}>{children}</body>
       </html>
     </Providers>
   )

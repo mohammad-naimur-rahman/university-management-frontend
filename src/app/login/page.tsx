@@ -30,7 +30,7 @@ export default function LoginPage() {
           <div>
             <FormInput name='password' type='password' size='large' placeholder='Type Your password' label='Password' />
           </div>
-          <Button type='primary' htmlType='submit'>
+          <Button type='primary' htmlType='submit' size='large' className='!px-10'>
             Login
           </Button>
         </Form>
