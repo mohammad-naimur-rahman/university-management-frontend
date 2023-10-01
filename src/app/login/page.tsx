@@ -3,6 +3,8 @@
 import loginImage from '@/assets/login.png'
 import Form from '@/components/forms/Form'
 import FormInput from '@/components/forms/FormInput'
+import { useUserLoginMutation } from '@/redux/api/authApi'
+import { storeUserInfo } from '@/service/auth.service'
 import { Button, Col, Row } from 'antd'
 import Image from 'next/image'
 import { SubmitHandler } from 'react-hook-form'
@@ -13,8 +15,16 @@ type FormValues = {
 }
 
 export default function LoginPage() {
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    console.log(data)
+  const [loginUser] = useUserLoginMutation()
+
+  const onSubmit: SubmitHandler<FormValues> = async data => {
+    try {
+      const userData = await loginUser(data).unwrap()
+      console.log(userData)
+      storeUserInfo({ accessToken: userData?.data?.accessToken })
+    } catch (err) {
+      console.log(err)
+    }
   }
   return (
     <Row justify='center' align='middle' className='min-h-screen'>
