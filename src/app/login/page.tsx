@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <Row justify='center' align='middle' className='min-h-screen'>
       <Col sm={12} md={16} lg={10}>
-        <Image src={loginImage} width={500} alt='Login' />
+        <Image src={loginImage} width={500} alt='Login' priority />
       </Col>
       <Col sm={12} md={8} lg={8} className='space-y-3'>
         <h1 className='text-3xl font-semibold'>First login into your account</h1>
