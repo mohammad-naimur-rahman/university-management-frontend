@@ -3,10 +3,11 @@
 import ActionBar from '@/components/ui/ActionBar'
 import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
 import UMTable from '@/components/ui/UMTable'
-import { useDepartmentsQuery } from '@/redux/api/departmentApi'
+import { useDeleteDepartmentMutation, useDepartmentsQuery } from '@/redux/api/departmentApi'
 import { useDebounce } from '@/redux/hooks'
-import { DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -34,6 +35,7 @@ const ManageDepartmentPage = () => {
   }
 
   const { data, isFetching } = useDepartmentsQuery({ ...query })
+  const [deleteDepartment] = useDeleteDepartmentMutation()
 
   const departments = data?.departments
   const meta = data?.meta
@@ -46,6 +48,7 @@ const ManageDepartmentPage = () => {
     {
       title: 'Created At',
       dataIndex: 'createdAt',
+      render: (data: any) => data && dayjs(data).format('MMM D, YYYY hh:mm A'),
       sorter: true,
     },
     {
@@ -53,13 +56,12 @@ const ManageDepartmentPage = () => {
       render: (data: any) => {
         return (
           <div className='flex gap-2'>
-            <Button type='primary' onClick={() => console.log(data)}>
-              <EyeOutlined />
-            </Button>
-            <Button type='primary' onClick={() => console.log(data)}>
-              <EditOutlined />
-            </Button>
-            <Button type='primary' danger onClick={() => console.log(data)}>
+            <Link href={`/super_admin/department/edit/${data.id}`}>
+              <Button type='primary'>
+                <EditOutlined />
+              </Button>
+            </Link>
+            <Button type='primary' danger onClick={() => deleteDepartment(data.id)}>
               <DeleteOutlined />
             </Button>
           </div>
