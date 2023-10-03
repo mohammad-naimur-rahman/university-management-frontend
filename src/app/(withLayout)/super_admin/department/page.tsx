@@ -2,54 +2,69 @@
 
 import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
 import UMTable from '@/components/ui/UMTable'
+import { useDepartmentsQuery } from '@/redux/api/departmentApi'
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import Link from 'next/link'
+import { useState } from 'react'
 
 const ManageDepartmentPage = () => {
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-    },
-  ]
+  const query: Record<string, any> = {}
+
+  const [size, setsize] = useState(10)
+  const [page, setpage] = useState(1)
+  const [sortBy, setsortBy] = useState('')
+  const [sortOrder, setsortOrder] = useState('')
+
+  query['limit'] = size
+  query['page'] = page
+  query['sortBy'] = sortBy
+  query['sortOrder'] = sortOrder
+
+  const { data, isFetching } = useDepartmentsQuery({ ...query })
+
+  const departments = data?.departments
+  const meta = data?.meta
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Title',
+      dataIndex: 'title',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      sorter: (a: any, b: any) => a.age - b.age,
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      sorter: true,
     },
     {
       title: 'Action',
       render: (data: any) => {
         return (
-          <Button type='primary' danger onClick={() => console.log(data)}>
-            X
-          </Button>
+          <div className='flex gap-2'>
+            <Button type='primary' onClick={() => console.log(data)}>
+              <EyeOutlined />
+            </Button>
+            <Button type='primary' onClick={() => console.log(data)}>
+              <EditOutlined />
+            </Button>
+            <Button type='primary' danger onClick={() => console.log(data)}>
+              <DeleteOutlined />
+            </Button>
+          </div>
         )
       },
     },
   ]
 
   const onPaginationChange = (page: number, pageSize: number) => {
-    console.log(page, pageSize)
+    setpage(page)
+    setsize(pageSize)
   }
 
   const onTableChange = (pagination: any, filters: any, sorter: any) => {
     const { order, field } = sorter
-    console.log(order, field)
+    setsortBy(field)
+    setsortOrder(order === 'ascend' ? 'asc' : 'desc')
   }
 
   return (
@@ -69,10 +84,10 @@ const ManageDepartmentPage = () => {
 
       <UMTable
         columns={columns}
-        dataSource={dataSource}
-        loading={false}
-        pageSize={10}
-        total={100}
+        dataSource={departments}
+        loading={isFetching}
+        pageSize={size}
+        total={meta?.total!}
         onPaginationChange={onPaginationChange}
         onTableChange={onTableChange}
       />
