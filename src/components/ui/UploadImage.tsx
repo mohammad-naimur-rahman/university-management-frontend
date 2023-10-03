@@ -27,7 +27,7 @@ const UploadImage = () => {
   const [imageUrl, setImageUrl] = useState<string>();
 
   const handleChange: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>
+    info: UploadChangeParam<UploadFile>,
   ) => {
     if (info.file.status === "uploading") {
       setLoading(true);
