@@ -1,155 +1,68 @@
-"use client";
-import { Col, Row } from "antd";
-import FormInput from "../Forms/FormInput";
-import FormSelectField from "../Forms/FormSelectField";
-import UploadImage from "../ui/UploadImage";
-import {
-  acDepartmentOptions,
-  acSemesterOptions,
-  facultyOptions,
-  genderOptions,
-} from "@/constants/global";
+'use client'
+import { acDepartmentOptions, acSemesterOptions, facultyOptions, genderOptions } from '@/constants/global'
+import { Col, Row } from 'antd'
+import FormInput from '../Forms/FormInput'
+import FormSelectField from '../Forms/FormSelectField'
+import UploadImage from '../ui/UploadImage'
 
 const StudentInfo = () => {
   return (
-    <div
-      style={{
-        border: "1px solid #d9d9d9",
-        borderRadius: "5px",
-        padding: "15px",
-        marginBottom: "10px",
-        marginTop: "10px",
-      }}
-    >
+    <div className='border border-[#d9d9d9] rounded-md p-4 my-2.5'>
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        <Col
-          className="gutter-row"
-          span={6}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
-          <FormInput
-            type="text"
-            name="student.name.firstName"
-            size="large"
-            label="First Name"
-          />
+        <Col className='gutter-row mb-2.5' span={6}>
+          <FormInput type='text' name='student.name.firstName' size='large' label='First Name' />
         </Col>
-        <Col
-          className="gutter-row"
-          span={6}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
-          <FormInput
-            type="text"
-            name="student.name.middleName"
-            size="large"
-            label="Middle Name"
-          />
+        <Col className='gutter-row mb-2.5' span={6}>
+          <FormInput type='text' name='student.name.middleName' size='large' label='Middle Name' />
         </Col>
-        <Col
-          className="gutter-row"
-          span={6}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
-          <FormInput
-            type="text"
-            name="student.name.lastName"
-            size="large"
-            label="Last Name"
-          />
+        <Col className='gutter-row mb-2.5' span={6}>
+          <FormInput type='text' name='student.name.lastName' size='large' label='Last Name' />
         </Col>
-        <Col
-          className="gutter-row"
-          span={6}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
-          <FormInput
-            type="password"
-            name="password"
-            size="large"
-            label="Password"
-          />
+        <Col className='gutter-row mb-2.5' span={6}>
+          <FormInput type='password' name='password' size='large' label='Password' />
         </Col>
-        <Col
-          className="gutter-row"
-          span={8}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
+        <Col className='gutter-row mb-2.5' span={8}>
           <FormSelectField
-            size="large"
-            name="student.academicDepartment"
+            size='large'
+            name='student.academicDepartment'
             options={acDepartmentOptions}
-            label="Academic Department"
-            placeholder="Select"
+            label='Academic Department'
+            placeholder='Select'
           />
         </Col>
-        <Col
-          className="gutter-row"
-          span={8}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
+        <Col className='gutter-row mb-2.5' span={8}>
           <FormSelectField
-            size="large"
-            name="student.academicFaculty"
+            size='large'
+            name='student.academicFaculty'
             options={facultyOptions}
-            label="Academic Faculty"
-            placeholder="Select"
+            label='Academic Faculty'
+            placeholder='Select'
           />
         </Col>
-        <Col
-          className="gutter-row"
-          span={8}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
+        <Col className='gutter-row mb-2.5' span={8}>
           <FormSelectField
-            size="large"
-            name="student.academicSemester"
+            size='large'
+            name='student.academicSemester'
             options={acSemesterOptions}
-            label="Academic Semester"
-            placeholder="Select"
+            label='Academic Semester'
+            placeholder='Select'
           />
         </Col>
-        <Col
-          className="gutter-row"
-          span={8}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
+        <Col className='gutter-row mb-2.5' span={8}>
           <FormSelectField
-            size="large"
-            name="student.gender"
+            size='large'
+            name='student.gender'
             options={genderOptions}
-            label="Gender"
-            placeholder="Select"
+            label='Gender'
+            placeholder='Select'
           />
         </Col>
-        <Col
-          className="gutter-row"
-          span={8}
-          style={{
-            marginBottom: "10px",
-          }}
-        >
+        <Col className='gutter-row mb-2.5' span={8}>
           <UploadImage />
         </Col>
       </Row>
     </div>
-  );
-};
+  )
+}
 
-export default StudentInfo;
+export default StudentInfo

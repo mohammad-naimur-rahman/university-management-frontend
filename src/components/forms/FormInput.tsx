@@ -1,35 +1,26 @@
-"use client";
+'use client'
 
-import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
-import { Input } from "antd";
-import { useFormContext, Controller } from "react-hook-form";
+import { getErrorMessageByPropertyName } from '@/utils/schema-validator'
+import { Input } from 'antd'
+import { Controller, useFormContext } from 'react-hook-form'
 interface IInput {
-  name: string;
-  type?: string;
-  size?: "large" | "small";
-  value?: string | string[] | undefined;
-  id?: string;
-  placeholder?: string;
-  validation?: object;
-  label?: string;
+  name: string
+  type?: string
+  size?: 'large' | 'small'
+  value?: string | string[] | undefined
+  id?: string
+  placeholder?: string
+  validation?: object
+  label?: string
 }
 
-const FormInput = ({
-  name,
-  type,
-  size = "large",
-  value,
-  id,
-  placeholder,
-  validation,
-  label,
-}: IInput) => {
+const FormInput = ({ name, type, size = 'large', value, id, placeholder, validation, label }: IInput) => {
   const {
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext()
 
-  const errorMessage = getErrorMessageByPropertyName(errors, name);
+  const errorMessage = getErrorMessageByPropertyName(errors, name)
 
   return (
     <>
@@ -38,7 +29,7 @@ const FormInput = ({
         control={control}
         name={name}
         render={({ field }) =>
-          type === "password" ? (
+          type === 'password' ? (
             <Input.Password
               type={type}
               size={size}
@@ -47,19 +38,13 @@ const FormInput = ({
               value={value ? value : field.value}
             />
           ) : (
-            <Input
-              type={type}
-              size={size}
-              placeholder={placeholder}
-              {...field}
-              value={value ? value : field.value}
-            />
+            <Input type={type} size={size} placeholder={placeholder} {...field} value={value ? value : field.value} />
           )
         }
       />
-      <small style={{ color: "red" }}>{errorMessage}</small>
+      <small className='text-red-600'>{errorMessage}</small>
     </>
-  );
-};
+  )
+}
 
-export default FormInput;
+export default FormInput
