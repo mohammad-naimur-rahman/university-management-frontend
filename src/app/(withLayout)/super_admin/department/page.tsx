@@ -1,16 +1,19 @@
 'use client'
 
+import ActionBar from '@/components/ui/ActionBar'
 import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
 import UMTable from '@/components/ui/UMTable'
 import { useDepartmentsQuery } from '@/redux/api/departmentApi'
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { useDebounce } from '@/redux/hooks'
+import { DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
+import { Button, Input } from 'antd'
 import Link from 'next/link'
 import { useState } from 'react'
 
 const ManageDepartmentPage = () => {
   const query: Record<string, any> = {}
 
+  const [searchTerm, setsearchTerm] = useState('')
   const [size, setsize] = useState(10)
   const [page, setpage] = useState(1)
   const [sortBy, setsortBy] = useState('')
@@ -20,6 +23,15 @@ const ManageDepartmentPage = () => {
   query['page'] = page
   query['sortBy'] = sortBy
   query['sortOrder'] = sortOrder
+
+  const debouncedValue = useDebounce({
+    searchQuery: searchTerm,
+    delay: 600,
+  })
+
+  if (!!debouncedValue) {
+    query['searchTerm'] = debouncedValue
+  }
 
   const { data, isFetching } = useDepartmentsQuery({ ...query })
 
@@ -67,6 +79,12 @@ const ManageDepartmentPage = () => {
     setsortOrder(order === 'ascend' ? 'asc' : 'desc')
   }
 
+  const resetFilters = () => {
+    setsortBy('')
+    setsortOrder('')
+    setsearchTerm('')
+  }
+
   return (
     <div>
       <UMBreadCrumb
@@ -77,10 +95,29 @@ const ManageDepartmentPage = () => {
           },
         ]}
       />
-      <h1>Department List</h1>
-      <Link href='/super_admin/department/create'>
-        <Button type='primary'>Create</Button>
-      </Link>
+
+      <ActionBar title='Department List'>
+        <div className='flex items-center gap-2'>
+          <Input
+            placeholder='Search...'
+            size='large'
+            className='max-w-sm'
+            onChange={e => setsearchTerm(e.target.value)}
+          />
+
+          {(!!sortBy || !!sortOrder || !!searchTerm) && (
+            <Button type='primary' onClick={resetFilters}>
+              <ReloadOutlined />
+            </Button>
+          )}
+        </div>
+
+        <Link href='/super_admin/department/create'>
+          <Button type='primary' size='large'>
+            Create Department
+          </Button>
+        </Link>
+      </ActionBar>
 
       <UMTable
         columns={columns}

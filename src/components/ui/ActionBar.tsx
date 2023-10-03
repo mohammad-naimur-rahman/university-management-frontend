@@ -5,9 +5,9 @@ type ActionBarProps = {
 
 const ActionBar = ({ title, children }: ActionBarProps) => {
   return (
-    <div>
+    <div className='space-y-3 pt-3'>
       <h1>{title}</h1>
-      <div className='flex'>{children}</div>
+      <div className='flex justify-between items-center'>{children}</div>
     </div>
   )
 }
