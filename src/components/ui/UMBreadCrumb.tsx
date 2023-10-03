@@ -1,31 +1,35 @@
-import { HomeOutlined } from '@ant-design/icons'
-import { Breadcrumb } from 'antd'
-import Link from 'next/link'
+import { Breadcrumb } from "antd";
+import Link from "next/link";
+import { HomeOutlined } from "@ant-design/icons";
 
-interface UMBreadCrumbProps {
+const UMBreadCrumb = ({
+  items,
+}: {
   items: {
-    label: string
-    link: string
-  }[]
-}
-
-const UMBreadCrumb = ({ items }: UMBreadCrumbProps) => {
+    label: string;
+    link: string;
+  }[];
+}) => {
   const breadCrumbItems = [
     {
       title: (
-        <Link href='/'>
+        <Link href="/">
           <HomeOutlined />
         </Link>
       ),
     },
-    ...items.map(({ label, link }) => {
+    ...items.map((item) => {
       return {
-        title: link ? <Link href={link}>{label}</Link> : <span>{label}</span>,
-      }
+        title: item.link ? (
+          <Link href={item.link}>{item.label}</Link>
+        ) : (
+          <span>{item.label}</span>
+        ),
+      };
     }),
-  ]
+  ];
 
-  return <Breadcrumb items={breadCrumbItems} />
-}
+  return <Breadcrumb items={breadCrumbItems}></Breadcrumb>;
+};
 
-export default UMBreadCrumb
+export default UMBreadCrumb;

@@ -1,18 +1,14 @@
-'use client'
+"use client";
+import { store } from "@/redux/store";
+import { Provider } from "react-redux";
+import StyledComponentsRegistry from "./AntdRegistry";
 
-import { store } from '@/redux/store'
-import { ReactNode } from 'react'
-import { Provider } from 'react-redux'
-import StyledComponentsRegistry from './AntdRegistry'
-
-interface Props {
-  children: ReactNode
-}
-
-export default function Providers({ children }: Props) {
+const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>
       <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
     </Provider>
-  )
-}
+  );
+};
+
+export default Providers;
