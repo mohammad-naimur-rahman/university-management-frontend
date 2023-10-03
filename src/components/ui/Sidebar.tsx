@@ -22,7 +22,7 @@ const SideBar = () => {
       onCollapse={value => setCollapsed(value)}
       width={280}
       className='overflow-auto h-screen sticky left-0 top-0 bottom-0'>
-      <div className='text-white text-[2rem] text-center font-bold mb-2 py-2.5'>UMS</div>
+      <p className='text-white text-3xl text-center font-bold mb-2 py-2.5'>UMS</p>
       <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline' items={sidebarItems(role)} />
     </Sider>
   )
