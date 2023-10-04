@@ -2,7 +2,9 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { Upload, message } from 'antd'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
+import Image from 'next/image'
 import { useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader()
@@ -22,9 +24,14 @@ const beforeUpload = (file: RcFile) => {
   return isJpgOrPng && isLt2M
 }
 
-const UploadImage = () => {
+type ImageUploadProps = {
+  name: string
+}
+
+const UploadImage = ({ name }: ImageUploadProps) => {
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState<string>()
+  const { setValue } = useFormContext()
 
   const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
     if (info.file.status === 'uploading') {
@@ -33,6 +40,7 @@ const UploadImage = () => {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
+      setValue(name, info.file.originFileObj)
       getBase64(info.file.originFileObj as RcFile, url => {
         setLoading(false)
         setImageUrl(url)
@@ -43,23 +51,21 @@ const UploadImage = () => {
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className='mt-2'>Upload</div>
+      <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   )
 
   return (
-    <>
-      <Upload
-        name='avatar'
-        listType='picture-card'
-        className='avatar-uploader'
-        showUploadList={false}
-        action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
-        beforeUpload={beforeUpload}
-        onChange={handleChange}>
-        {imageUrl ? <img src={imageUrl} alt='avatar' className='w-full' /> : uploadButton}
-      </Upload>
-    </>
+    <Upload
+      name={name}
+      listType='picture-card'
+      className='avatar-uploader'
+      showUploadList={false}
+      action='/api/file'
+      beforeUpload={beforeUpload}
+      onChange={handleChange}>
+      {imageUrl ? <Image src={imageUrl} alt='avatar' className='w-full' width={100} height={100} /> : uploadButton}
+    </Upload>
   )
 }
 

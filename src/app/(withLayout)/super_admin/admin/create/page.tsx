@@ -8,30 +8,40 @@ import FormTextArea from '@/components/Forms/FormTextArea'
 import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
 import UploadImage from '@/components/ui/UploadImage'
 import { bloodGroupOptions, genderOptions } from '@/constants/global'
+import { useAddAdminWithFormDataMutation } from '@/redux/api/adminApi'
 import { useDepartmentsQuery } from '@/redux/api/departmentApi'
 import { adminSchema } from '@/schemas/admin'
 import { IDepartment } from '@/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import { Button, Col, Row } from 'antd'
+import { Button, Col, Row, message } from 'antd'
 
 const CreateAdminPage = () => {
   const { data } = useDepartmentsQuery({ limit: 100, page: 1 })
-
+  const [addAdminWithFormData] = useAddAdminWithFormDataMutation()
   const departments: IDepartment[] = data?.departments!
 
   const departmentOptions =
     departments &&
-    departments?.map(({ title, id }) => {
+    departments?.map(department => {
       return {
-        label: title,
-        value: id,
+        label: department?.title,
+        value: department?.id,
       }
     })
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (values: any) => {
+    const obj = { ...values }
+    const file = obj['file']
+    delete obj['file']
+    const data = JSON.stringify(obj)
+    const formData = new FormData()
+    formData.append('file', file as Blob)
+    formData.append('data', data)
+    message.loading('Creating...')
     try {
-      console.log(data)
+      await addAdminWithFormData(formData)
+      message.success('Admin created successfully!')
     } catch (err: any) {
       console.error(err.message)
     }
@@ -55,22 +65,59 @@ const CreateAdminPage = () => {
 
       <div>
         <Form submitHandler={onSubmit} resolver={yupResolver(adminSchema)}>
-          <div className='border-[1px] border-[#d9d9d9] rounded-md p-4 mb-2.5'>
-            <p className='text-lg mb-2.5'>Admin Information</p>
+          <div
+            style={{
+              border: '1px solid #d9d9d9',
+              borderRadius: '5px',
+              padding: '15px',
+              marginBottom: '10px',
+            }}>
+            <p
+              style={{
+                fontSize: '18px',
+                marginBottom: '10px',
+              }}>
+              Admin Information
+            </p>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='text' name='admin.name.firstName' size='large' label='First Name' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='text' name='admin.name.middleName' size='large' label='Middle Name' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='text' name='admin.name.lastName' size='large' label='Last Name' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='password' name='password' size='large' label='Password' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormSelectField
                   size='large'
                   name='admin.gender'
@@ -79,7 +126,12 @@ const CreateAdminPage = () => {
                   placeholder='Select'
                 />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormSelectField
                   size='large'
                   name='admin.managementDepartment'
@@ -88,29 +140,71 @@ const CreateAdminPage = () => {
                   placeholder='Select'
                 />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
-                <UploadImage />
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
+                <UploadImage name='file' />
               </Col>
             </Row>
           </div>
 
           {/* basic info */}
-          <div className='border-[1px] border-[#d9d9d9] rounded-md p-4 mb-2.5'>
-            <p className='text-lg mb-2.5'>Basic Information</p>
+          <div
+            style={{
+              border: '1px solid #d9d9d9',
+              borderRadius: '5px',
+              padding: '15px',
+              marginBottom: '10px',
+            }}>
+            <p
+              style={{
+                fontSize: '18px',
+                marginBottom: '10px',
+              }}>
+              Basic Information
+            </p>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='email' name='admin.email' size='large' label='Email address' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='text' name='admin.contactNo' size='large' label='Contact No.' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='text' name='admin.emergencyContactNo' size='large' label='Emergency Contact No.' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormDatePicker name='admin.dateOfBirth' label='Date of birth' size='large' />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormSelectField
                   size='large'
                   name='admin.bloodGroup'
@@ -119,14 +213,19 @@ const CreateAdminPage = () => {
                   placeholder='Select'
                 />
               </Col>
-              <Col className='gutter-row mb-2.5' span={8}>
+              <Col
+                className='gutter-row'
+                span={8}
+                style={{
+                  marginBottom: '10px',
+                }}>
                 <FormInput type='text' name='admin.designation' size='large' label='Designation' />
               </Col>
-              <Col span={12} className='my-2.5 mx-0'>
+              <Col span={12} style={{ margin: '10px 0' }}>
                 <FormTextArea name='admin.presentAddress' label='Present address' rows={4} />
               </Col>
 
-              <Col span={12} className='my-2.5 mx-0'>
+              <Col span={12} style={{ margin: '10px 0' }}>
                 <FormTextArea name='admin.permanentAddress' label='Permanent address' rows={4} />
               </Col>
             </Row>
