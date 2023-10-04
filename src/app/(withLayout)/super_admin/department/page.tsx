@@ -20,10 +20,10 @@ const ManageDepartmentPage = () => {
   const [sortBy, setsortBy] = useState('')
   const [sortOrder, setsortOrder] = useState('')
 
-  query['limit'] = size
-  query['page'] = page
-  query['sortBy'] = sortBy
-  query['sortOrder'] = sortOrder
+  size ? (query['limit'] = size) : null
+  page ? (query['page'] = page) : null
+  sortBy ? (query['sortBy'] = sortBy) : null
+  sortOrder ? (query['sortOrder'] = sortOrder) : null
 
   const debouncedValue = useDebounce({
     searchQuery: searchTerm,

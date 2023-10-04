@@ -7,13 +7,28 @@ import FormSelectField from '@/components/Forms/FormSelectField'
 import FormTextArea from '@/components/Forms/FormTextArea'
 import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
 import UploadImage from '@/components/ui/UploadImage'
-import { bloodGroupOptions, departmentOptions, genderOptions } from '@/constants/global'
+import { bloodGroupOptions, genderOptions } from '@/constants/global'
+import { useDepartmentsQuery } from '@/redux/api/departmentApi'
 import { adminSchema } from '@/schemas/admin'
+import { IDepartment } from '@/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { Button, Col, Row } from 'antd'
 
 const CreateAdminPage = () => {
+  const { data } = useDepartmentsQuery({ limit: 100, page: 1 })
+
+  const departments: IDepartment[] = data?.departments!
+
+  const departmentOptions =
+    departments &&
+    departments?.map(({ title, id }) => {
+      return {
+        label: title,
+        value: id,
+      }
+    })
+
   const onSubmit = async (data: any) => {
     try {
       console.log(data)
