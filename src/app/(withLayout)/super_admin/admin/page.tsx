@@ -1,155 +1,166 @@
-'use client'
-import ActionBar from '@/components/ui/ActionBar'
-import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
-import UMTable from '@/components/ui/UMTable'
-import { useAdminsQuery } from '@/redux/api/adminApi'
-import { useDebounce } from '@/redux/hooks'
-import { IDepartment } from '@/types'
-import { DeleteOutlined, EditOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Button, Input } from 'antd'
-import dayjs from 'dayjs'
-import Link from 'next/link'
-import { useState } from 'react'
+"use client";
+import ActionBar from "@/components/ui/ActionBar";
+import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
+import { Button, Input } from "antd";
+import Link from "next/link";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FilterOutlined,
+  ReloadOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
+import { useState } from "react";
+import { useDebounced } from "@/redux/hooks";
+import UMTable from "@/components/ui/UMTable";
+import { useAdminsQuery } from "@/redux/api/adminApi";
+import { IDepartment } from "@/types";
+import dayjs from "dayjs";
 
 const AdminPage = () => {
-  const query: Record<string, any> = {}
+  const query: Record<string, any> = {};
 
-  const [page, setPage] = useState<number>(1)
-  const [size, setSize] = useState<number>(10)
-  const [sortBy, setSortBy] = useState<string>('')
-  const [sortOrder, setSortOrder] = useState<string>('')
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [page, setPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(10);
+  const [sortBy, setSortBy] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  query['limit'] = size
-  query['page'] = page
-  query['sortBy'] = sortBy
-  query['sortOrder'] = sortOrder
+  query["limit"] = size;
+  query["page"] = page;
+  query["sortBy"] = sortBy;
+  query["sortOrder"] = sortOrder;
 
-  const debouncedSearchTerm = useDebounce({
+  const debouncedSearchTerm = useDebounced({
     searchQuery: searchTerm,
     delay: 600,
-  })
+  });
 
   if (!!debouncedSearchTerm) {
-    query['searchTerm'] = debouncedSearchTerm
+    query["searchTerm"] = debouncedSearchTerm;
   }
-  const { data, isLoading } = useAdminsQuery({ ...query })
+  const { data, isLoading } = useAdminsQuery({ ...query });
 
-  const admins = data?.admins
-  const meta = data?.meta
+  const admins = data?.admins;
+  const meta = data?.meta;
 
   const columns = [
     {
-      title: 'Id',
-      dataIndex: 'id',
+      title: "Id",
+      dataIndex: "id",
       sorter: true,
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: "Name",
+      dataIndex: "name",
       render: function (data: Record<string, string>) {
-        const fullName = `${data?.firstName} ${data?.middleName} ${data?.lastName}`
-        return <>{fullName}</>
+        const fullName = `${data?.firstName} ${data?.middleName} ${data?.lastName}`;
+        return <>{fullName}</>;
       },
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: "Email",
+      dataIndex: "email",
     },
     {
-      title: 'Department',
-      dataIndex: 'managementDepartment',
+      title: "Department",
+      dataIndex: "managementDepartment",
       render: function (data: IDepartment) {
-        return <>{data?.title}</>
+        return <>{data?.title}</>;
       },
     },
     {
-      title: 'Designation',
-      dataIndex: 'designation',
+      title: "Designation",
+      dataIndex: "designation",
     },
     {
-      title: 'Created at',
-      dataIndex: 'createdAt',
+      title: "Created at",
+      dataIndex: "createdAt",
       render: function (data: any) {
-        return data && dayjs(data).format('MMM D, YYYY hh:mm A')
+        return data && dayjs(data).format("MMM D, YYYY hh:mm A");
       },
       sorter: true,
     },
     {
-      title: 'Contact no.',
-      dataIndex: 'contactNo',
+      title: "Contact no.",
+      dataIndex: "contactNo",
     },
     {
-      title: 'Action',
-      dataIndex: 'id',
+      title: "Action",
+      dataIndex: "id",
       render: function (data: any) {
         return (
           <>
             <Link href={`/super_admin/admin/details/${data.id}`}>
-              <Button onClick={() => console.log(data)} type='primary'>
+              <Button onClick={() => console.log(data)} type="primary">
                 <EyeOutlined />
               </Button>
             </Link>
             <Link href={`/super_admin/admin/edit/${data.id}`}>
               <Button
                 style={{
-                  margin: '0px 5px',
+                  margin: "0px 5px",
                 }}
                 onClick={() => console.log(data)}
-                type='primary'>
+                type="primary"
+              >
                 <EditOutlined />
               </Button>
             </Link>
-            <Button onClick={() => console.log(data)} type='primary' danger>
+            <Button onClick={() => console.log(data)} type="primary" danger>
               <DeleteOutlined />
             </Button>
           </>
-        )
+        );
       },
     },
-  ]
+  ];
   const onPaginationChange = (page: number, pageSize: number) => {
-    console.log('Page:', page, 'PageSize:', pageSize)
-    setPage(page)
-    setSize(pageSize)
-  }
+    console.log("Page:", page, "PageSize:", pageSize);
+    setPage(page);
+    setSize(pageSize);
+  };
   const onTableChange = (pagination: any, filter: any, sorter: any) => {
-    const { order, field } = sorter
+    const { order, field } = sorter;
     // console.log(order, field);
-    setSortBy(field as string)
-    setSortOrder(order === 'ascend' ? 'asc' : 'desc')
-  }
+    setSortBy(field as string);
+    setSortOrder(order === "ascend" ? "asc" : "desc");
+  };
 
   const resetFilters = () => {
-    setSortBy('')
-    setSortOrder('')
-    setSearchTerm('')
-  }
+    setSortBy("");
+    setSortOrder("");
+    setSearchTerm("");
+  };
   return (
     <div>
       <UMBreadCrumb
         items={[
           {
-            label: 'super_admin',
-            link: '/super_admin',
+            label: "super_admin",
+            link: "/super_admin",
           },
         ]}
       />
-      <ActionBar title='Department List'>
+      <ActionBar title="Department List">
         <Input
-          size='large'
-          placeholder='Search'
-          onChange={e => setSearchTerm(e.target.value)}
+          size="large"
+          placeholder="Search"
+          onChange={(e) => setSearchTerm(e.target.value)}
           style={{
-            width: '20%',
+            width: "20%",
           }}
         />
         <div>
-          <Link href='/super_admin/admin/create'>
-            <Button type='primary'>Create Admin</Button>
+          <Link href="/super_admin/admin/create">
+            <Button type="primary">Create Admin</Button>
           </Link>
           {(!!sortBy || !!sortOrder || !!searchTerm) && (
-            <Button style={{ margin: '0px 5px' }} type='primary' onClick={resetFilters}>
+            <Button
+              style={{ margin: "0px 5px" }}
+              type="primary"
+              onClick={resetFilters}
+            >
               <ReloadOutlined />
             </Button>
           )}
@@ -161,14 +172,14 @@ const AdminPage = () => {
         columns={columns}
         dataSource={admins}
         pageSize={size}
-        total={meta?.total!}
+        totalPages={meta?.total}
         showSizeChanger={true}
         onPaginationChange={onPaginationChange}
         onTableChange={onTableChange}
         showPagination={true}
       />
     </div>
-  )
-}
+  );
+};
 
-export default AdminPage
+export default AdminPage;

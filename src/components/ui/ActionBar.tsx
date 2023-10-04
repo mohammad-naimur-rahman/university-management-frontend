@@ -1,15 +1,24 @@
 type ActionBarProps = {
-  title?: string
-  children?: React.ReactElement | React.ReactNode
-}
+  title?: string;
+  children?: React.ReactElement | React.ReactNode;
+};
 
 const ActionBar = ({ title, children }: ActionBarProps) => {
   return (
-    <div className='space-y-3 pt-3'>
+    <div>
       <h1>{title}</h1>
-      <div className='flex justify-between items-center'>{children}</div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          margin: "10px 0px",
+        }}
+      >
+        {children}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ActionBar
+export default ActionBar;

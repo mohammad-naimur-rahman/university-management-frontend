@@ -1,137 +1,176 @@
-'use client'
-
-import ActionBar from '@/components/ui/ActionBar'
-import UMBreadCrumb from '@/components/ui/UMBreadCrumb'
-import UMTable from '@/components/ui/UMTable'
-import { useDeleteDepartmentMutation, useDepartmentsQuery } from '@/redux/api/departmentApi'
-import { useDebounce } from '@/redux/hooks'
-import { DeleteOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons'
-import { Button, Input } from 'antd'
-import dayjs from 'dayjs'
-import Link from 'next/link'
-import { useState } from 'react'
+"use client";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
+import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
+import UMTable from "@/components/ui/UMTable";
+import {
+  useDeleteDepartmentMutation,
+  useDepartmentsQuery,
+} from "@/redux/api/departmentApi";
+import { Button, Input, message } from "antd";
+import Link from "next/link";
+import { useState } from "react";
+import ActionBar from "@/components/ui/ActionBar";
+import { useDebounced } from "@/redux/hooks";
+import dayjs from "dayjs";
 
 const ManageDepartmentPage = () => {
-  const query: Record<string, any> = {}
+  const query: Record<string, any> = {};
 
-  const [searchTerm, setsearchTerm] = useState('')
-  const [size, setsize] = useState(10)
-  const [page, setpage] = useState(1)
-  const [sortBy, setsortBy] = useState('')
-  const [sortOrder, setsortOrder] = useState('')
+  const [page, setPage] = useState<number>(1);
+  const [size, setSize] = useState<number>(10);
+  const [sortBy, setSortBy] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [deleteDepartment] = useDeleteDepartmentMutation();
 
-  size ? (query['limit'] = size) : null
-  page ? (query['page'] = page) : null
-  sortBy ? (query['sortBy'] = sortBy) : null
-  sortOrder ? (query['sortOrder'] = sortOrder) : null
+  query["limit"] = size;
+  query["page"] = page;
+  query["sortBy"] = sortBy;
+  query["sortOrder"] = sortOrder;
+  // query["searchTerm"] = searchTerm;
 
-  const debouncedValue = useDebounce({
+  const debouncedTerm = useDebounced({
     searchQuery: searchTerm,
     delay: 600,
-  })
+  });
 
-  if (!!debouncedValue) {
-    query['searchTerm'] = debouncedValue
+  if (!!debouncedTerm) {
+    query["searchTerm"] = debouncedTerm;
   }
+  const { data, isLoading } = useDepartmentsQuery({ ...query });
 
-  const { data, isFetching } = useDepartmentsQuery({ ...query })
-  const [deleteDepartment] = useDeleteDepartmentMutation()
+  const departments = data?.departments;
+  const meta = data?.meta;
 
-  const departments = data?.departments
-  const meta = data?.meta
+  const deleteHandler = async (id: string) => {
+    message.loading("Deleting.....");
+    try {
+      //   console.log(data);
+      await deleteDepartment(id);
+      message.success("Department Deleted successfully");
+    } catch (err: any) {
+      //   console.error(err.message);
+      message.error(err.message);
+    }
+  };
 
   const columns = [
     {
-      title: 'Title',
-      dataIndex: 'title',
+      title: "Title",
+      dataIndex: "title",
     },
     {
-      title: 'Created At',
-      dataIndex: 'createdAt',
-      render: (data: any) => data && dayjs(data).format('MMM D, YYYY hh:mm A'),
+      title: "CreatedAt",
+      dataIndex: "createdAt",
+      render: function (data: any) {
+        return data && dayjs(data).format("MMM D, YYYY hh:mm A");
+      },
       sorter: true,
     },
     {
-      title: 'Action',
-      render: (data: any) => {
+      title: "Action",
+      render: function (data: any) {
         return (
-          <div className='flex gap-2'>
-            <Link href={`/super_admin/department/edit/${data.id}`}>
-              <Button type='primary'>
+          <>
+            <Link href={`/super_admin/department/edit/${data?.id}`}>
+              <Button
+                style={{
+                  margin: "0px 5px",
+                }}
+                onClick={() => console.log(data)}
+                type="primary"
+              >
                 <EditOutlined />
               </Button>
             </Link>
-            <Button type='primary' danger onClick={() => deleteDepartment(data.id)}>
+            <Button
+              onClick={() => deleteHandler(data?.id)}
+              type="primary"
+              danger
+            >
               <DeleteOutlined />
             </Button>
-          </div>
-        )
+          </>
+        );
       },
     },
-  ]
+  ];
 
   const onPaginationChange = (page: number, pageSize: number) => {
-    setpage(page)
-    setsize(pageSize)
-  }
-
-  const onTableChange = (pagination: any, filters: any, sorter: any) => {
-    const { order, field } = sorter
-    setsortBy(field)
-    setsortOrder(order === 'ascend' ? 'asc' : 'desc')
-  }
+    console.log("Page:", page, "PageSize:", pageSize);
+    setPage(page);
+    setSize(pageSize);
+  };
+  const onTableChange = (pagination: any, filter: any, sorter: any) => {
+    const { order, field } = sorter;
+    // console.log(order, field);
+    setSortBy(field as string);
+    setSortOrder(order === "ascend" ? "asc" : "desc");
+  };
 
   const resetFilters = () => {
-    setsortBy('')
-    setsortOrder('')
-    setsearchTerm('')
-  }
+    setSortBy("");
+    setSortOrder("");
+    setSearchTerm("");
+  };
 
   return (
     <div>
       <UMBreadCrumb
         items={[
           {
-            label: 'super_admin',
-            link: '/super_admin',
+            label: "super_admin",
+            link: "/super_admin",
           },
         ]}
       />
 
-      <ActionBar title='Department List'>
-        <div className='flex items-center gap-2'>
-          <Input
-            placeholder='Search...'
-            size='large'
-            className='max-w-sm'
-            onChange={e => setsearchTerm(e.target.value)}
-          />
-
+      <ActionBar title="Department List">
+        <Input
+          type="text"
+          size="large"
+          placeholder="Search..."
+          style={{
+            width: "20%",
+          }}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+        />
+        <div>
+          <Link href="/super_admin/department/create">
+            <Button type="primary">Create</Button>
+          </Link>
           {(!!sortBy || !!sortOrder || !!searchTerm) && (
-            <Button type='primary' onClick={resetFilters}>
+            <Button
+              onClick={resetFilters}
+              type="primary"
+              style={{ margin: "0px 5px" }}
+            >
               <ReloadOutlined />
             </Button>
           )}
         </div>
-
-        <Link href='/super_admin/department/create'>
-          <Button type='primary' size='large'>
-            Create Department
-          </Button>
-        </Link>
       </ActionBar>
 
       <UMTable
+        loading={isLoading}
         columns={columns}
         dataSource={departments}
-        loading={isFetching}
         pageSize={size}
-        total={meta?.total!}
+        totalPages={meta?.total}
+        showSizeChanger={true}
         onPaginationChange={onPaginationChange}
         onTableChange={onTableChange}
+        showPagination={true}
       />
     </div>
-  )
-}
+  );
+};
 
-export default ManageDepartmentPage
+export default ManageDepartmentPage;

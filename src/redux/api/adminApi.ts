@@ -1,17 +1,17 @@
-import { IAdmin, IMeta } from '@/types'
-import { tagTypes } from '../tag-types'
-import { baseApi } from './baseApi'
+import { IAdmin, IMeta } from "@/types";
+import { baseApi } from "./baseApi";
+import { tagTypes } from "../tag-types";
 
-const ADMIN_URL = '/admins'
+const ADMIN_URL = "/admins";
 
 export const adminApi = baseApi.injectEndpoints({
-  endpoints: build => ({
+  endpoints: (build) => ({
     addAdminWithFormData: build.mutation({
-      query: data => ({
-        url: '/users/create-admin',
-        method: 'POST',
+      query: (data) => ({
+        url: "/users/create-admin",
+        method: "POST",
         data,
-        contentType: 'multipart/form-data',
+        contentType: "multipart/form-data",
       }),
       invalidatesTags: [tagTypes.admin],
     }),
@@ -20,19 +20,19 @@ export const adminApi = baseApi.injectEndpoints({
       query: (arg: Record<string, any>) => {
         return {
           url: ADMIN_URL,
-          method: 'GET',
+          method: "GET",
           params: arg,
-        }
+        };
       },
       transformResponse: (response: IAdmin[], meta: IMeta) => {
         return {
           admins: response,
           meta,
-        }
+        };
       },
       providesTags: [tagTypes.admin],
     }),
   }),
-})
+});
 
-export const { useAdminsQuery, useAddAdminWithFormDataMutation } = adminApi
+export const { useAdminsQuery, useAddAdminWithFormDataMutation } = adminApi;

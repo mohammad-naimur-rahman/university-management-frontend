@@ -1,41 +1,39 @@
-'use client'
+"use client";
 
-import { Table } from 'antd'
+import { Table } from "antd";
 
-interface TableProps {
-  columns: any
-  dataSource: any
-  loading: boolean
-  pageSize?: number
-  total: number
-  onPaginationChange: (page: number, pageSize: number) => void
-  pageSizeOptions?: string[]
-  showSizeChanger?: boolean
-  onTableChange: (pagination: any, filters: any, sorter: any) => void
-  showPagination?: boolean
-}
+type UMTableProps = {
+  loading?: boolean;
+  columns: any;
+  dataSource: any;
+  pageSize?: number;
+  totalPages?: number;
+  showSizeChanger?: boolean;
+  onPaginationChange?: (page: number, pageSize: number) => void;
+  onTableChange?: (pagination: any, filter: any, sorter: any) => void;
+  showPagination?: boolean;
+};
 
-export default function UMTable({
+const UMTable = ({
+  loading = false,
   columns,
   dataSource,
-  loading,
-  pageSize = 10,
-  total,
-  onPaginationChange,
-  pageSizeOptions = ['5', '10', '20'],
+  pageSize,
+  totalPages,
   showSizeChanger = true,
+  onPaginationChange,
   onTableChange,
   showPagination = true,
-}: TableProps) {
+}: UMTableProps) => {
   const paginationConfig = showPagination
     ? {
-        pageSize,
-        total,
-        pageSizeOptions,
-        showSizeChanger,
+        pageSize: pageSize,
+        total: totalPages,
+        pageSizeOptions: [5, 10, 20],
+        showSizeChanger: showSizeChanger,
         onChange: onPaginationChange,
       }
-    : false
+    : false;
 
   return (
     <Table
@@ -45,5 +43,7 @@ export default function UMTable({
       pagination={paginationConfig}
       onChange={onTableChange}
     />
-  )
-}
+  );
+};
+
+export default UMTable;
