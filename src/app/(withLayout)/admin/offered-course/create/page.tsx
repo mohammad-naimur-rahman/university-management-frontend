@@ -26,7 +26,7 @@ const CreateOfferedCoursePage = () => {
         label: semester?.academicSemester?.title,
         value: semester?.id,
       };
-    }
+    },
   );
 
   const onSubmit = async (data: any) => {

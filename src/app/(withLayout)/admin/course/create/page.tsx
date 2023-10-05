@@ -29,7 +29,7 @@ const CreateCoursePage = () => {
         return {
           courseId: id,
         };
-      }
+      },
     );
 
     data.coursePreRequisites = coursePreRequisitesOptions;
