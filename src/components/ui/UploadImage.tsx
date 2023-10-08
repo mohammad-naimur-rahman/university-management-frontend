@@ -34,7 +34,7 @@ const UploadImage = ({ name }: ImageUploadProps) => {
   const { setValue } = useFormContext();
 
   const handleChange: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>,
+    info: UploadChangeParam<UploadFile>
   ) => {
     if (info.file.status === "uploading") {
       setLoading(true);

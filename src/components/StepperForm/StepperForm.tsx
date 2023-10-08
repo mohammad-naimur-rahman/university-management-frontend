@@ -29,13 +29,13 @@ const StepperForm = ({
   const [current, setCurrent] = useState<number>(
     !!getFromLocalStorage("step")
       ? Number(JSON.parse(getFromLocalStorage("step") as string).step)
-      : 0,
+      : 0
   );
 
   const [savedValues, setSavedValues] = useState(
     !!getFromLocalStorage(persistKey)
       ? JSON.parse(getFromLocalStorage(persistKey) as string)
-      : "",
+      : ""
   );
 
   useEffect(() => {

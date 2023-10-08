@@ -32,7 +32,6 @@ const CreateAdminPage = () => {
     });
 
   const onSubmit = async (values: any) => {
-    console.log("E");
     const obj = { ...values };
     const file = obj["file"];
     delete obj["file"];
