@@ -27,7 +27,7 @@ const SemesterRegistrationField = ({
           semester?.academicSemester?.year,
         value: semester?.id,
       };
-    }
+    },
   );
 
   return (

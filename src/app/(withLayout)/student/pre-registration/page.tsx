@@ -129,7 +129,7 @@ const ViewPreregistrationPage = () => {
                                 </td>
                               </tr>
                             );
-                          }
+                          },
                         )}
                       </table>
                     </td>
@@ -167,14 +167,14 @@ const ViewPreregistrationPage = () => {
                     </td>
                   </tr>
                 );
-              }
+              },
             )}
           </table>
         ),
       };
 
       return obj;
-    }
+    },
   );
 
   const isAtLeastOneCourseTaken =

@@ -68,7 +68,7 @@ const FacultyCoursesPage = () => {
         data: {
           classSchedules: IOfferedCourseSchedule[];
           section: IOfferedCourseSection;
-        }[]
+        }[],
       ) {
         const section = data?.map((el) => el?.section);
         return (
